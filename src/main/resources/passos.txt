@@ -1,0 +1,6 @@
+- utilizei o bean validation para fazer as validações da classe modelo:
+
+<dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
