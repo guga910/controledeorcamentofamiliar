@@ -6,4 +6,6 @@ import br.com.desafios.controledeorcamentofamiliar.modelo.Receita;
 
 public interface ReceitaRepository extends JpaRepository<Receita, Long>{
 
+//	Optional<Receita> save(Optional<Receita> receita);
+
 }
