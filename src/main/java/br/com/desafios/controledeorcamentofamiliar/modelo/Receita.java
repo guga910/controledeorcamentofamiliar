@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import br.com.desafios.controledeorcamentofamiliar.dto.ReceitaDto;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +19,9 @@ public class Receita {
 	private Long id;
 	@NotNull @NotEmpty
 	private String descricao;
+	@Column(nullable = false)
 	private BigDecimal valor;
+	@Column(nullable = false)
 	private LocalDate data;
 	
 	
@@ -27,6 +31,15 @@ public class Receita {
 		this.descricao = descricao;
 		this.valor = valor;
 		this.data = data;
+	}
+
+
+
+	public Receita(ReceitaDto receitaDto) {
+		this.descricao = receitaDto.getDescricao();
+		this.valor = receitaDto.getValor();
+		this.data = receitaDto.getData();
+		this.id = receitaDto.getId();
 	}
 
 	public Long getId() {
@@ -77,6 +90,16 @@ public class Receita {
 		Receita other = (Receita) obj;
 		return Objects.equals(data, other.data) && Objects.equals(descricao, other.descricao)
 				&& Objects.equals(valor, other.valor);
+	}
+
+	public  Receita converter(ReceitaDto receitaDto) {
+		Receita receita= new Receita();
+		receita.setId(receitaDto.getId());
+		receita.setDescricao(receitaDto.getDescricao());
+		receita.setData(receitaDto.getData());
+		receita.setValor(receitaDto.getValor());
+		
+		return receita;
 	}
 
 	

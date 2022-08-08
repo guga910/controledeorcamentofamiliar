@@ -28,7 +28,7 @@ public class ReceitaController {
 	@Autowired
 	private ReceitaRepository receitaRepository;
 	private Receita receita = new Receita();
-	private ReceitaDto receitaDto = new ReceitaDto();
+//	private ReceitaDto receitaDto = new ReceitaDto();
 
 	/**
 	 * Para criar minha URI, o meu UriComponentsBuilder usa o caminho do parametro
@@ -43,6 +43,7 @@ public class ReceitaController {
 	@Transactional
 	public ResponseEntity<ReceitaDto> cadastro(@RequestBody ReceitaDto receitaDto, UriComponentsBuilder uriBuilder) {
 		List<ReceitaDto> lista = listagemDeReceita();
+
 		if (!lista.contains(receitaDto)) {
 			Receita receita = receitaDto.converteEmReceita(receitaDto);
 			receitaRepository.save(receita);
@@ -68,17 +69,23 @@ public class ReceitaController {
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<ReceitaDto> atualizar(@PathVariable Long id, @RequestBody ReceitaDto receitaDto) {
+		List<ReceitaDto> lista = listagemDeReceita();
 		Receita receita = receitaRepository.findById(id).orElseThrow();
+		Receita converter = new Receita(receitaDto);
+		if (lista.contains(converter)) {
 
-		receita.setDescricao(receitaDto.getDescricao());
-		receita.setValor(receitaDto.getValor());
-		receita.setData(receitaDto.getData());
+			receita.setDescricao(receitaDto.getDescricao());
+			receita.setValor(receitaDto.getValor());
+			receita.setData(receitaDto.getData());
 
-		ReceitaDto receitaDtoAtualizada = new ReceitaDto(receitaRepository.save(receita));
-		return ResponseEntity.ok(receitaDtoAtualizada);
+			ReceitaDto receitaDtoAtualizada = new ReceitaDto(receitaRepository.save(receita));
+			return ResponseEntity.ok(receitaDtoAtualizada);
+		}
+		return ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{id}")
+	@Transactional
 	public void deletar(@PathVariable Long id) {
 		receita = receitaRepository.findById(id).orElseThrow();
 		receitaRepository.delete(receita);

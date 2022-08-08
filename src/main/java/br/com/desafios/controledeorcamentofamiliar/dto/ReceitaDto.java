@@ -17,6 +17,7 @@ public class ReceitaDto {
 	private LocalDate data;
 	
 	public ReceitaDto(Receita receita) {
+		
 		this.id= receita.getId();
 		this.descricao= receita.getDescricao();
 		this.valor= receita.getValor();
@@ -87,9 +88,7 @@ public ReceitaDto() {
 		return receitaDto;
 		
 	}
-//	public Receita converteEmReceita(ReceitaDto receitaDto) {
-		
-//	}
+
 
 	public Receita converteEmReceita(@Valid ReceitaDto receitaDto) {
 		Receita receita= new Receita();
