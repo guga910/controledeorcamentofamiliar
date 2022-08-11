@@ -1,8 +1,12 @@
 package br.com.desafios.controledeorcamentofamiliar.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +68,23 @@ public class ReceitaController {
 	public ResponseEntity<ReceitaDto> detalhe(@PathVariable("id") Long id) {
 		Optional<Receita> receita = receitaRepository.findById(id);
 		return ResponseEntity.ok(new ReceitaDto(receita.get()));
+	}
+	@GetMapping("/descricao/{receita}")
+	public List<ReceitaDto> buscaDeReceita(@PathVariable("receita") String descricao) {
+		List<ReceitaDto> receitasDto= listagemDeReceita();
+		List<ReceitaDto> resposta= new ArrayList<ReceitaDto>();
+		Set<ReceitaDto> dtos= new LinkedHashSet<>(receitasDto);
+		dtos.forEach(d->{
+			if(d.getDescricao().contains(descricao)) {
+				resposta.add(d);	
+			}
+		});
+		return resposta;
+
+	}
+	public List<ReceitaDto> listagemDeReceitaPorMes(String mes){
+		
+		return null;
 	}
 
 	@PutMapping("/{id}")

@@ -1,12 +1,15 @@
 package br.com.desafios.controledeorcamentofamiliar.modelo;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import br.com.desafios.controledeorcamentofamiliar.dto.DespesaDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,12 +28,13 @@ public class Despesa {
 	@Column(nullable = false)
 	private BigDecimal valor;
 	@Column(nullable = false)
-	private LocalDateTime data;
+	private LocalDate data;
+
+	@Enumerated(EnumType.STRING) // sera usado o valor de string ao inves do valor int da enum
+	private Categoria categoria = Categoria.OUTROS;
 
 	public Despesa() {
 	}
-
-
 
 	public Despesa(DespesaDto despesa) {
 		super();
@@ -38,9 +42,8 @@ public class Despesa {
 		this.descricao = despesa.getDescricao();
 		this.valor = despesa.getValor();
 		this.data = despesa.getData();
+		this.categoria = despesa.getCategoria();
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -66,11 +69,11 @@ public class Despesa {
 		this.valor = valor;
 	}
 
-	public LocalDateTime getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(LocalDateTime data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
@@ -89,18 +92,31 @@ public class Despesa {
 			return false;
 		Despesa other = (Despesa) obj;
 		return Objects.equals(data, other.data) && Objects.equals(descricao, other.descricao)
-				 && Objects.equals(valor, other.valor);
+				&& Objects.equals(valor, other.valor);
 	}
 
 	public static Despesa converter(DespesaDto despesaDto) {
 		Despesa despesa = new Despesa();
-		
+
 		despesa.setId(despesaDto.getId());
 		despesa.setDescricao(despesaDto.getDescricao());
 		despesa.setValor(despesaDto.getValor());
 		despesa.setData(despesaDto.getData());
+		if(despesaDto.getCategoria()== null) {
+			
+		}else {
+			despesa.setCategoria(despesaDto.getCategoria());
+		}
 
 		return despesa;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 }

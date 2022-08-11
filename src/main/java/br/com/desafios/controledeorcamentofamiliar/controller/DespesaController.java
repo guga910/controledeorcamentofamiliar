@@ -1,8 +1,11 @@
 package br.com.desafios.controledeorcamentofamiliar.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +37,9 @@ public class DespesaController {
 	@Transactional
 	public ResponseEntity<DespesaDto> cadastrar(@RequestBody DespesaDto despesaDto, UriComponentsBuilder uriBuilder) {
 
+		despesa = Despesa.converter(despesaDto);
 		List<Despesa> despesas = repositoryDespesas.findAll();
-		 despesa = Despesa.converter(despesaDto);
+		 
 		if (!despesas.contains(despesa)) {
 			repositoryDespesas.save(despesa);
 			URI uri = uriBuilder.path("/despesa/{id}").buildAndExpand(despesa.getId()).toUri();
@@ -56,6 +60,34 @@ public class DespesaController {
 		Optional<Despesa> despesa = repositoryDespesas.findById(id);
 		return ResponseEntity.ok(new DespesaDto(despesa.get()));
 	}
+	
+	@GetMapping("/descricao/{descricao}")
+	public List<DespesaDto> bustaDeDespesas(@PathVariable("descricao") String despesa){
+		Set<DespesaDto> despesas= new LinkedHashSet<>(listagem());
+		List<DespesaDto> descricoes= new ArrayList<>();
+		despesas.forEach(r->{
+			if(r.getDescricao().contains(despesa)) {
+				descricoes.add(r);
+			}
+		});
+		
+		return descricoes;
+	}
+	
+//	@GetMapping("/mes/{mes}")
+//	public List<DespesaDto> despesaDoMes(@PathVariable("mes") Integer mes){
+//		
+//		LocalDate inicio=LocalDate.of(2022, mes, 1);
+//		LocalDate fim=LocalDate.of(2022, mes+1, 1);
+//		String intervalo= " '"+inicio+"' and '"+fim+"' ";
+//		List<Despesa> despesas= repositoryDespesas.despesaDoMes(intervalo);
+//		List<DespesaDto> dtos= DespesaDto.converter(despesas);
+//		
+//		
+//		return dtos;
+//	}
+	
+	
 
 	@PutMapping("/{id}")
 	@Transactional
